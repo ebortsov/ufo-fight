@@ -496,7 +496,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 40, y: 10, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 13529881}
@@ -1004,6 +1004,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2067441268}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &2085078565 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4531164181399622916, guid: 757488d43e5014509b748e62e6fcf44a, type: 3}
+  m_PrefabInstance: {fileID: 2562908289642954123}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2085078570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2085078565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1b866ff7b1b26c50ad70a777f5495e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UFO_Movement
+  moveForce: 12
+  jumpForce: 90
+  rotationSpeed: 90
 --- !u!1001 &2562908289642954123
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1015,6 +1035,14 @@ PrefabInstance:
     - target: {fileID: 4531164181399622916, guid: 757488d43e5014509b748e62e6fcf44a, type: 3}
       propertyPath: m_Name
       value: Player_UFO
+      objectReference: {fileID: 0}
+    - target: {fileID: 7255168502983689396, guid: 757488d43e5014509b748e62e6fcf44a, type: 3}
+      propertyPath: m_LinearDamping
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7255168502983689396, guid: 757488d43e5014509b748e62e6fcf44a, type: 3}
+      propertyPath: m_AngularDamping
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8271059421607588175, guid: 757488d43e5014509b748e62e6fcf44a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1059,7 +1087,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4531164181399622916, guid: 757488d43e5014509b748e62e6fcf44a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2085078570}
   m_SourcePrefab: {fileID: 100100000, guid: 757488d43e5014509b748e62e6fcf44a, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
