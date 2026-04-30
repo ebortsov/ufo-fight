@@ -1024,6 +1024,8 @@ MonoBehaviour:
   moveForce: 12
   jumpForce: 90
   rotationSpeed: 90
+  maxSpeed: 16
+  jumpCooldown: 0.1
 --- !u!1001 &2562908289642954123
 PrefabInstance:
   m_ObjectHideFlags: 0
