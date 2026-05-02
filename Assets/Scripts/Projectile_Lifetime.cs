@@ -1,11 +1,23 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class Projectile_Lifetime : MonoBehaviour
+public class Projectile_Lifetime : NetworkBehaviour
 {
     [SerializeField] private float lifetime = 3f;
 
-    private void Start()
+    public override void OnNetworkSpawn()
     {
-        Destroy(gameObject, lifetime);
+        if (IsServer)
+        {
+            Invoke(nameof(DespawnProjectile), lifetime);
+        }
+    }
+
+    private void DespawnProjectile()
+    {
+        if (NetworkObject != null && NetworkObject.IsSpawned)
+        {
+            NetworkObject.Despawn();
+        }
     }
 }

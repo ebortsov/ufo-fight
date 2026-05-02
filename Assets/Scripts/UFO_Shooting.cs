@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Unity.Netcode;
 
-public class UFO_Shooting : MonoBehaviour
+public class UFO_Shooting : NetworkBehaviour
 {
     [Header("Shooting")]
     [SerializeField] private GameObject projectilePrefab;
@@ -13,27 +14,28 @@ public class UFO_Shooting : MonoBehaviour
 
     private void Update()
     {
+        if (!IsOwner) return;
+
         if (Mouse.current.leftButton.wasPressedThisFrame && Time.time >= nextShootTime)
         {
-            Shoot();
+            ShootServerRpc(shootPoint.position, shootPoint.rotation);
             nextShootTime = Time.time + shootCooldown;
         }
     }
 
-    private void Shoot()
+    [ServerRpc]
+    private void ShootServerRpc(Vector3 position, Quaternion rotation)
     {
-        GameObject projectile = Instantiate(
-            projectilePrefab,
-            shootPoint.position,
-            shootPoint.rotation
-        );
+        GameObject projectile = Instantiate(projectilePrefab, position, rotation);
 
         Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
-        projectileRb.linearVelocity = shootPoint.forward * projectileSpeed;
+        projectileRb.linearVelocity = rotation * Vector3.forward * projectileSpeed;
 
         Physics.IgnoreCollision(
             projectile.GetComponent<Collider>(),
             GetComponent<Collider>()
         );
+
+        projectile.GetComponent<NetworkObject>().Spawn();
     }
 }

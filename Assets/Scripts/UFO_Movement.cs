@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Unity.Netcode;
 
-public class UFO_Movement : MonoBehaviour
+public class UFO_Movement : NetworkBehaviour
 {
     [Header("Movement")]
     [SerializeField] private float moveForce = 12f;
@@ -20,6 +21,8 @@ public class UFO_Movement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!IsOwner) return;
+
         // Forward / backward movement
         if (Keyboard.current.wKey.isPressed)
         {
@@ -66,6 +69,8 @@ public class UFO_Movement : MonoBehaviour
 
     private void Update()
     {
+        if (!IsOwner) return;
+        
         // One press = one jump impulse.
         // Holding Space will NOT continue applying force.
         if (Keyboard.current.spaceKey.wasPressedThisFrame && Time.time >= nextJumpTime)
