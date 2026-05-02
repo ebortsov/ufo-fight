@@ -6,6 +6,8 @@ public class UFO_Health : MonoBehaviour
 
     private int currentHealth;
 
+    public int CurrentHealth => currentHealth;
+
     private void Awake()
     {
         currentHealth = maxHealth;

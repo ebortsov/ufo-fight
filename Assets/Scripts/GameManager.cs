@@ -1,8 +1,10 @@
 using UnityEngine;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+    [SerializeField] private TextMeshProUGUI gameOverText;
 
     private bool gameOver = false;
 
@@ -20,6 +22,9 @@ public class GameManager : MonoBehaviour
         gameOver = true;
 
         Debug.Log($"{destroyedUfo.gameObject.name} was destroyed. Game over!");
+        
+        gameOverText.gameObject.SetActive(true);
+        gameOverText.text = $"{destroyedUfo.gameObject.name} was destroyed!\nPress R to restart";
 
         DisableAllPlayerControls();
     }
