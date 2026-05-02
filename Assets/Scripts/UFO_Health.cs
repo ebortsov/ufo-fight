@@ -26,6 +26,9 @@ public class UFO_Health : MonoBehaviour
     private void Die()
     {
         Debug.Log($"{gameObject.name} destroyed!");
+
+        GameManager.Instance.PlayerDestroyed(this);
+
         gameObject.SetActive(false);
     }
 }
