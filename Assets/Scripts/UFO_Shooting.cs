@@ -28,14 +28,16 @@ public class UFO_Shooting : NetworkBehaviour
     {
         GameObject projectile = Instantiate(projectilePrefab, position, rotation);
 
-        Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
-        projectileRb.linearVelocity = rotation * Vector3.forward * projectileSpeed;
+        NetworkObject networkObject = projectile.GetComponent<NetworkObject>();
+        networkObject.Spawn();
+
+        Vector3 velocity = rotation * Vector3.forward * projectileSpeed;
+
+        projectile.GetComponent<Projectile_Movement>().Initialize(velocity);
 
         Physics.IgnoreCollision(
             projectile.GetComponent<Collider>(),
             GetComponent<Collider>()
         );
-
-        projectile.GetComponent<NetworkObject>().Spawn();
     }
 }
