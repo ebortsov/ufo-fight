@@ -1,25 +1,29 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class UFO_Health : MonoBehaviour
+public class UFO_Health : NetworkBehaviour
 {
     [SerializeField] private int maxHealth = 5;
 
-    private int currentHealth;
+    public NetworkVariable<int> CurrentHealth = new NetworkVariable<int>();
 
-    public int CurrentHealth => currentHealth;
-
-    private void Awake()
+    public override void OnNetworkSpawn()
     {
-        currentHealth = maxHealth;
+        if (IsServer)
+        {
+            CurrentHealth.Value = maxHealth;
+        }
     }
 
     public void TakeDamage(int damage)
     {
-        currentHealth -= damage;
+        if (!IsServer) return;
 
-        Debug.Log($"{gameObject.name} HP: {currentHealth}");
+        CurrentHealth.Value -= damage;
 
-        if (currentHealth <= 0)
+        Debug.Log($"{gameObject.name} HP: {CurrentHealth.Value}");
+
+        if (CurrentHealth.Value <= 0)
         {
             Die();
         }
@@ -29,8 +33,11 @@ public class UFO_Health : MonoBehaviour
     {
         Debug.Log($"{gameObject.name} destroyed!");
 
-        GameManager.Instance.PlayerDestroyed(this);
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.PlayerDestroyed(this);
+        }
 
-        gameObject.SetActive(false);
+        NetworkObject.Despawn();
     }
 }
