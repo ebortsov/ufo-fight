@@ -1,9 +1,12 @@
 using Unity.Netcode;
 using UnityEngine;
+using TMPro;
 
 public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance;
+
+    [SerializeField] private TextMeshProUGUI gameOverText;
 
     private NetworkVariable<bool> gameOver = new NetworkVariable<bool>(false);
 
@@ -27,7 +30,13 @@ public class GameManager : NetworkBehaviour
     [ClientRpc]
     private void EndGameClientRpc(ulong loserClientId)
     {
-        Debug.Log($"Game Over! Player {loserClientId} lost.");
+        bool isLocalLoser = NetworkManager.Singleton.LocalClientId == loserClientId;
+
+        if (gameOverText != null)
+        {
+            gameOverText.gameObject.SetActive(true);
+            gameOverText.text = isLocalLoser ? "You Lost" : "You Won";
+        }
 
         DisableControls();
     }
