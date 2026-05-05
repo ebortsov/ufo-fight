@@ -31,6 +31,13 @@ public class UFO_Health : NetworkBehaviour
         }
     }
 
+    public void ResetHealth()
+    {
+        if (!IsServer) return;
+
+        CurrentHealth.Value = maxHealth;
+    }
+
     private void Die()
     {
         Debug.Log($"{gameObject.name} destroyed!");

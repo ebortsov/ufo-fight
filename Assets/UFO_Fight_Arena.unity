@@ -242,7 +242,6 @@ GameObject:
   - component: {fileID: 62725904}
   - component: {fileID: 62725907}
   - component: {fileID: 62725905}
-  - component: {fileID: 62725906}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -279,18 +278,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   ShowTopMostFoldoutHeaderGroup: 1
   gameOverText: {fileID: 1518943312}
---- !u!114 &62725906
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 62725903}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b354c0c446e91bef19fc56476980b1bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameRestart
 --- !u!114 &62725907
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -625,10 +612,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 332ed940863a16ff9a88f68dcd9e71ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthUI
-  playerHealth: {fileID: 0}
-  enemyHealth: {fileID: 0}
-  playerHealthText: {fileID: 0}
-  enemyHealthText: {fileID: 0}
 --- !u!114 &400173634
 MonoBehaviour:
   m_ObjectHideFlags: 0
