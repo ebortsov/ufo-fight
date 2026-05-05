@@ -1,47 +1,46 @@
+using Unity.Netcode;
 using UnityEngine;
-using TMPro;
 
-public class GameManager : MonoBehaviour
+public class GameManager : NetworkBehaviour
 {
-    public static GameManager Instance { get; private set; }
-    [SerializeField] private TextMeshProUGUI gameOverText;
+    public static GameManager Instance;
 
-    private bool gameOver = false;
+    private NetworkVariable<bool> gameOver = new NetworkVariable<bool>(false);
 
     private void Awake()
     {
         Instance = this;
-        Debug.Log("GameManager initialized");
     }
 
     public void PlayerDestroyed(UFO_Health destroyedUfo)
     {
-        if (gameOver)
+        if (!IsServer) return;
+
+        if (gameOver.Value)
             return;
 
-        gameOver = true;
+        gameOver.Value = true;
 
-        Debug.Log($"{destroyedUfo.gameObject.name} was destroyed. Game over!");
-        
-        gameOverText.gameObject.SetActive(true);
-        gameOverText.text = $"{destroyedUfo.gameObject.name} was destroyed!\nPress R to restart";
-
-        DisableAllPlayerControls();
+        EndGameClientRpc(destroyedUfo.OwnerClientId);
     }
 
-    private void DisableAllPlayerControls()
+    [ClientRpc]
+    private void EndGameClientRpc(ulong loserClientId)
     {
-        UFO_Movement[] movementScripts = FindObjectsByType<UFO_Movement>(FindObjectsSortMode.None);
-        UFO_Shooting[] shootingScripts = FindObjectsByType<UFO_Shooting>(FindObjectsSortMode.None);
+        Debug.Log($"Game Over! Player {loserClientId} lost.");
 
-        foreach (UFO_Movement movement in movementScripts)
-        {
-            movement.enabled = false;
-        }
+        DisableControls();
+    }
 
-        foreach (UFO_Shooting shooting in shootingScripts)
-        {
-            shooting.enabled = false;
-        }
+    private void DisableControls()
+    {
+        UFO_Movement[] movements = FindObjectsByType<UFO_Movement>(FindObjectsSortMode.None);
+        UFO_Shooting[] shootings = FindObjectsByType<UFO_Shooting>(FindObjectsSortMode.None);
+
+        foreach (var m in movements)
+            m.enabled = false;
+
+        foreach (var s in shootings)
+            s.enabled = false;
     }
 }

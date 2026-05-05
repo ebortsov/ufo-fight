@@ -19,12 +19,14 @@ public class UFO_Health : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        CurrentHealth.Value -= damage;
+        if (CurrentHealth.Value <= 0)
+            return;
 
-        Debug.Log($"{gameObject.name} HP: {CurrentHealth.Value}");
+        CurrentHealth.Value -= damage;
 
         if (CurrentHealth.Value <= 0)
         {
+            CurrentHealth.Value = 0;
             Die();
         }
     }
@@ -38,6 +40,7 @@ public class UFO_Health : NetworkBehaviour
             GameManager.Instance.PlayerDestroyed(this);
         }
 
-        NetworkObject.Despawn();
+        // Do NOT despawn player here.
+        // The GameManager will freeze the game for everyone.
     }
 }
