@@ -1,11 +1,10 @@
-using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
-using System.Collections.Generic;
 using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 
@@ -14,6 +13,7 @@ public class LobbyManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] private MainMenuUI mainMenuUI;
     [SerializeField] private TMP_Text gameCodeText;
+    [SerializeField] private TMP_Text playerCountText;
     [SerializeField] private TMP_InputField gameCodeInputField;
     [SerializeField] private TMP_Text joinErrorText;
     [SerializeField] private Button startGameButton;
@@ -28,6 +28,8 @@ public class LobbyManager : MonoBehaviour
     public async void CreateLobby()
     {
         gameCodeText.text = "Creating lobby...";
+        playerCountText.text = "Players: 1 / 2";
+
         isHost = true;
         startGameButton.gameObject.SetActive(false);
 
@@ -66,10 +68,14 @@ public class LobbyManager : MonoBehaviour
             gameCodeText.text = "Game Code:\n" + currentLobby.LobbyCode;
 
             startGameButton.gameObject.SetActive(true);
+            startGameButton.interactable = false;
+
+            UpdatePlayerCountUI();
 
             Debug.Log("Created lobby. Code: " + currentLobby.LobbyCode);
 
             StartLobbyHeartbeat();
+            StartLobbyRefresh();
         }
         catch (LobbyServiceException e)
         {
@@ -88,17 +94,11 @@ public class LobbyManager : MonoBehaviour
             return;
         }
 
+        joinErrorText.text = "Joining lobby...";
+
         try
         {
             currentLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(code);
-
-            isHost = false;
-            startGameButton.gameObject.SetActive(false);
-
-            gameCodeText.text = "Game Code:\n" + currentLobby.LobbyCode;
-            joinErrorText.text = "";
-
-            mainMenuUI.ShowCreateLobby();
 
             if (currentLobby.Data != null && currentLobby.Data.ContainsKey("RelayJoinCode"))
             {
@@ -110,15 +110,23 @@ public class LobbyManager : MonoBehaviour
                 joinErrorText.text = "Lobby has no Relay code.";
                 return;
             }
+
+            isHost = false;
+            startGameButton.gameObject.SetActive(false);
+
+            gameCodeText.text = "Game Code:\n" + currentLobby.LobbyCode;
+            joinErrorText.text = "";
+
+            UpdatePlayerCountUI();
+            StartLobbyRefresh();
+
+            mainMenuUI.ShowCreateLobby();
+
+            Debug.Log("Joined lobby. Code: " + currentLobby.LobbyCode);
         }
         catch (LobbyServiceException e)
         {
-            joinErrorText.text = "Invalid game code or game already started.";
-            Debug.LogError(e);
-        }
-        catch (Exception e)
-        {
-            joinErrorText.text = "Something went wrong.";
+            joinErrorText.text = "Invalid code or game already started.";
             Debug.LogError(e);
         }
     }
@@ -127,6 +135,12 @@ public class LobbyManager : MonoBehaviour
     {
         if (!isHost || currentLobby == null)
             return;
+
+        if (currentLobby.Players.Count < MaxPlayers)
+        {
+            gameCodeText.text = "Need 2 players to start.";
+            return;
+        }
 
         startGameButton.interactable = false;
         gameCodeText.text = "Game Code:\n" + currentLobby.LobbyCode + "\n\nStarting game...";
@@ -153,6 +167,7 @@ public class LobbyManager : MonoBehaviour
 
     private void StartLobbyHeartbeat()
     {
+        CancelInvoke(nameof(SendHeartbeat));
         InvokeRepeating(nameof(SendHeartbeat), 15f, 15f);
     }
 
@@ -168,6 +183,48 @@ public class LobbyManager : MonoBehaviour
         catch (LobbyServiceException e)
         {
             Debug.LogWarning(e);
+        }
+    }
+
+    private void StartLobbyRefresh()
+    {
+        CancelInvoke(nameof(RefreshLobby));
+        InvokeRepeating(nameof(RefreshLobby), 2f, 2f);
+    }
+
+    private async void RefreshLobby()
+    {
+        if (currentLobby == null)
+            return;
+
+        try
+        {
+            currentLobby = await LobbyService.Instance.GetLobbyAsync(currentLobby.Id);
+            UpdatePlayerCountUI();
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.LogWarning(e);
+        }
+    }
+
+    private void UpdatePlayerCountUI()
+    {
+        if (currentLobby == null)
+            return;
+
+        int playerCount = currentLobby.Players.Count;
+
+        playerCountText.text = "Players: " + playerCount + " / " + MaxPlayers;
+
+        if (isHost)
+        {
+            startGameButton.gameObject.SetActive(true);
+            startGameButton.interactable = playerCount >= MaxPlayers;
+        }
+        else
+        {
+            startGameButton.gameObject.SetActive(false);
         }
     }
 }
