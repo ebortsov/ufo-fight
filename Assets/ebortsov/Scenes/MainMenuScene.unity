@@ -1673,32 +1673,16 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1154509445}
-  - component: {fileID: 1154509444}
+  - component: {fileID: 1154509448}
+  - component: {fileID: 1154509447}
+  - component: {fileID: 1154509446}
   m_Layer: 0
-  m_Name: LobbyManager
+  m_Name: LobbySystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1154509444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1154509443}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4454512da274339fb93af4f9a9838e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LobbyManager
-  mainMenuUI: {fileID: 221462470}
-  gameCodeText: {fileID: 1928339617}
-  playerCountText: {fileID: 1966180871}
-  gameCodeInputField: {fileID: 143796774}
-  joinErrorText: {fileID: 1031584381}
-  startGameButton: {fileID: 1367601335}
 --- !u!4 &1154509445
 Transform:
   m_ObjectHideFlags: 0
@@ -1714,6 +1698,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1154509446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1154509443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 088bc576648e1fd3c8fa7db1e2b23116, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HostLobbyManager
+  lobbyUI: {fileID: 1154509448}
+--- !u!114 &1154509447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1154509443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f036037943b17f7f3b7a7ffdc76419f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClientLobbyManager
+  lobbyUI: {fileID: 1154509448}
+--- !u!114 &1154509448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1154509443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4370903ebc0780159ae1507fc3117bf0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LobbyUI
+  mainMenuUI: {fileID: 221462470}
+  gameCodeText: {fileID: 1928339617}
+  playerCountText: {fileID: 1966180871}
+  gameCodeInputField: {fileID: 143796774}
+  joinErrorText: {fileID: 1031584381}
+  startGameButton: {fileID: 1367601335}
 --- !u!1 &1241025057
 GameObject:
   m_ObjectHideFlags: 0
@@ -2036,8 +2064,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1154509444}
-        m_TargetAssemblyTypeName: LobbyManager, Assembly-CSharp
+      - m_Target: {fileID: 1154509446}
+        m_TargetAssemblyTypeName: HostLobbyManager, Assembly-CSharp
         m_MethodName: StartGame
         m_Mode: 1
         m_Arguments:
@@ -2169,8 +2197,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1154509444}
-        m_TargetAssemblyTypeName: LobbyManager, Assembly-CSharp
+      - m_Target: {fileID: 1154509447}
+        m_TargetAssemblyTypeName: ClientLobbyManager, Assembly-CSharp
         m_MethodName: JoinLobby
         m_Mode: 1
         m_Arguments:
@@ -3048,20 +3076,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 221462470}
-        m_TargetAssemblyTypeName: MainMenuUI, Assembly-CSharp
-        m_MethodName: ShowCreateLobby
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1154509444}
-        m_TargetAssemblyTypeName: LobbyManager, Assembly-CSharp
+      - m_Target: {fileID: 1154509446}
+        m_TargetAssemblyTypeName: HostLobbyManager, Assembly-CSharp
         m_MethodName: CreateLobby
         m_Mode: 1
         m_Arguments:

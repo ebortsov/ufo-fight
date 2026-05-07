@@ -498,7 +498,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 34a14842cd93640eab91c23e6d2f70df, type: 2}
     - target: {fileID: 919132149155446097, guid: 750e8544a7a4b4ed39e49a4201ab4620, type: 3}
       propertyPath: m_Name
-      value: UFO
+      value: Player_UFO
       objectReference: {fileID: 0}
     - target: {fileID: 1372467901426617093, guid: 750e8544a7a4b4ed39e49a4201ab4620, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -926,6 +926,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 750e8544a7a4b4ed39e49a4201ab4620, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4613622889854395013}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 750e8544a7a4b4ed39e49a4201ab4620, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5951044261839826844}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 750e8544a7a4b4ed39e49a4201ab4620, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1742398093192457051}
   m_SourcePrefab: {fileID: 100100000, guid: 750e8544a7a4b4ed39e49a4201ab4620, type: 3}
 --- !u!1 &8594182855824630438 stripped
 GameObject:
@@ -980,3 +986,74 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.35739648, y: 0.10322608, z: 0.46685863}
   m_Center: {x: 0.0028184056, y: 0.076097764, z: 0.0026134253}
+--- !u!114 &5951044261839826844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8594182855824630438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 0
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!114 &1742398093192457051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8594182855824630438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkTransform
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkTransformExpanded: 0
+  AutoOwnerAuthorityTickOffset: 1
+  PositionInterpolationType: 0
+  RotationInterpolationType: 0
+  ScaleInterpolationType: 0
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
+  RotationLerpSmoothing: 1
+  RotationMaxInterpolationTime: 0.1
+  ScaleLerpSmoothing: 1
+  ScaleMaxInterpolationTime: 0.1
+  AuthorityMode: 0
+  TickSyncChildren: 0
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  SwitchTransformSpaceWhenParented: 0
+  Interpolate: 1
+  SlerpPosition: 0
