@@ -8,11 +8,19 @@ public class PlayerUfoMovement : NetworkBehaviour
     [SerializeField] private float moveSpeed = 8f;
     [SerializeField] private float rotationSpeed = 120f;
 
-    private CharacterController characterController;
+    [Header("Jump")]
+    [SerializeField] private float jumpForce = 7f;
+    [SerializeField] private float gravityMultiplier = 3.5f;
+
+    private Rigidbody rb;
+
+    private float moveInput;
+    private float rotateInput;
+    private bool jumpPressed;
 
     private void Awake()
     {
-        characterController = GetComponent<CharacterController>();
+        rb = GetComponent<Rigidbody>();
     }
 
     public override void OnNetworkSpawn()
@@ -25,18 +33,28 @@ public class PlayerUfoMovement : NetworkBehaviour
         if (!IsOwner)
             return;
 
-        HandleMovement();
+        ReadInput();
     }
 
-    private void HandleMovement()
+    private void FixedUpdate()
+    {
+        if (!IsOwner || rb == null)
+            return;
+
+        MoveUfo();
+        Jump();
+        ApplyExtraGravity();
+    }
+
+    private void ReadInput()
     {
         Keyboard keyboard = Keyboard.current;
 
         if (keyboard == null)
             return;
 
-        float rotateInput = 0f;
-        float moveInput = 0f;
+        rotateInput = 0f;
+        moveInput = 0f;
 
         if (keyboard.aKey.isPressed)
             rotateInput -= 1f;
@@ -50,23 +68,43 @@ public class PlayerUfoMovement : NetworkBehaviour
         if (keyboard.sKey.isPressed)
             moveInput -= 1f;
 
-        transform.Rotate(
-            Vector3.up,
-            rotateInput * rotationSpeed * Time.deltaTime
-        );
+        if (keyboard.spaceKey.wasPressedThisFrame)
+            jumpPressed = true;
+    }
+
+    private void MoveUfo()
+    {
+        Quaternion rotationDelta =
+            Quaternion.Euler(0f, rotateInput * rotationSpeed * Time.fixedDeltaTime, 0f);
+
+        rb.MoveRotation(rb.rotation * rotationDelta);
 
         Vector3 movement =
-            transform.forward * moveInput * moveSpeed * Time.deltaTime;
+            transform.forward * moveInput * moveSpeed * Time.fixedDeltaTime;
 
-        if (characterController != null)
+        rb.MovePosition(rb.position + movement);
+    }
+
+    private void Jump()
+    {
+        if (!jumpPressed)
+            return;
+
+        jumpPressed = false;
+
+        Vector3 velocity = rb.linearVelocity;
+
+        if (velocity.y < 0f)
         {
-            characterController.Move(movement);
-        }
-        else
-        {
-            transform.position += movement;
+            velocity.y = 0f;
+            rb.linearVelocity = velocity;
         }
 
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+    }
 
+    private void ApplyExtraGravity()
+    {
+        rb.AddForce(Physics.gravity * (gravityMultiplier - 1f), ForceMode.Acceleration);
     }
 }
