@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Scenes/LobbyScene.unity
     guid: 0cc8e9364da1a7544b7b4df895fc0256
   - enabled: 1
-    path: Assets/Scenes/MainMenuScene.unity
+    path: Assets/ebortsov/Scenes/MainMenuScene.unity
     guid: a90f950a47fc93c85882b20ec8106b0b
   - enabled: 0
     path: Assets/UFO_Fight_Arena.unity
