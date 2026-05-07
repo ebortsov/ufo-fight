@@ -143,6 +143,7 @@ public class HostLobbyManager : MonoBehaviour
             );
 
             Debug.Log("Host started Netcode and shared Relay code.");
+            StartCoroutine(LoadGameSceneWhenClientConnected());
         }
         catch (LobbyServiceException e)
         {
@@ -213,6 +214,34 @@ public class HostLobbyManager : MonoBehaviour
         lobbyUI.SetPlayerCount(playerCount, MaxPlayers);
         lobbyUI.SetStartButtonVisible(true);
         lobbyUI.SetStartButtonInteractable(playerCount >= MaxPlayers && !isStartingGame);
+    }
+
+    private IEnumerator LoadGameSceneWhenClientConnected()
+    {
+        lobbyUI.SetGameCodeText("Waiting for client connection...");
+
+        float timeout = 10f;
+        float timer = 0f;
+
+        while (NetworkManager.Singleton.ConnectedClientsIds.Count < MaxPlayers && timer < timeout)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        if (NetworkManager.Singleton.ConnectedClientsIds.Count < MaxPlayers)
+        {
+            lobbyUI.SetGameCodeText("Client did not connect in time.");
+            Debug.LogWarning("Timed out waiting for client Netcode connection.");
+            yield break;
+        }
+
+        Debug.Log("Both players connected. Loading GameScene.");
+
+        NetworkManager.Singleton.SceneManager.LoadScene(
+            "CityFightScene",
+            LoadSceneMode.Single
+        );
     }
 
     private void OnDestroy()
