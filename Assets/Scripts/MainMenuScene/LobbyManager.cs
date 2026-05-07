@@ -4,6 +4,9 @@ using UnityEngine.UI;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
+using System.Collections.Generic;
+using Unity.Services.Relay;
+using Unity.Services.Relay.Models;
 
 public class LobbyManager : MonoBehaviour
 {
@@ -16,6 +19,7 @@ public class LobbyManager : MonoBehaviour
 
     private Lobby currentLobby;
     private bool isHost;
+    private string relayJoinCode;
 
     private const string LobbyName = "UFO Fight Lobby";
     private const int MaxPlayers = 2;
@@ -34,9 +38,22 @@ public class LobbyManager : MonoBehaviour
 
         try
         {
+            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(MaxPlayers - 1);
+            relayJoinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+
             CreateLobbyOptions options = new CreateLobbyOptions
             {
-                IsPrivate = true
+                IsPrivate = true,
+                Data = new Dictionary<string, DataObject>
+                {
+                    {
+                        "RelayJoinCode",
+                        new DataObject(
+                            DataObject.VisibilityOptions.Member,
+                            relayJoinCode
+                        )
+                    }
+                }
             };
 
             currentLobby = await LobbyService.Instance.CreateLobbyAsync(
@@ -70,7 +87,7 @@ public class LobbyManager : MonoBehaviour
             return;
         }
 
-        joinErrorText.text = "Joining lobby...";
+        joinErrorText.text = "Invalid code or game already started.";
 
         try
         {
@@ -84,7 +101,16 @@ public class LobbyManager : MonoBehaviour
 
             mainMenuUI.ShowCreateLobby();
 
-            Debug.Log("Joined lobby. Code: " + currentLobby.LobbyCode);
+            if (currentLobby.Data != null && currentLobby.Data.ContainsKey("RelayJoinCode"))
+            {
+                relayJoinCode = currentLobby.Data["RelayJoinCode"].Value;
+                Debug.Log("Received Relay Join Code: " + relayJoinCode);
+            }
+            else
+            {
+                joinErrorText.text = "Lobby has no Relay code.";
+                return;
+            }
         }
         catch (LobbyServiceException e)
         {
@@ -93,12 +119,32 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
-    public void StartGame()
+    public async void StartGame()
     {
-        if (!isHost)
+        if (!isHost || currentLobby == null)
             return;
 
-        Debug.Log("Start Game clicked by host.");
+        startGameButton.interactable = false;
+        gameCodeText.text = "Game Code:\n" + currentLobby.LobbyCode + "\n\nStarting game...";
+
+        try
+        {
+            currentLobby = await LobbyService.Instance.UpdateLobbyAsync(
+                currentLobby.Id,
+                new UpdateLobbyOptions
+                {
+                    IsLocked = true
+                }
+            );
+
+            Debug.Log("Lobby locked. New players cannot join now.");
+        }
+        catch (LobbyServiceException e)
+        {
+            gameCodeText.text = "Failed to start game.";
+            startGameButton.interactable = true;
+            Debug.LogError(e);
+        }
     }
 
     private void StartLobbyHeartbeat()
