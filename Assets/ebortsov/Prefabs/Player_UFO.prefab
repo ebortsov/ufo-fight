@@ -1119,6 +1119,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 750e8544a7a4b4ed39e49a4201ab4620, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1742398093192457051}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 750e8544a7a4b4ed39e49a4201ab4620, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6723241717539774179}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 750e8544a7a4b4ed39e49a4201ab4620, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7448716331876904060}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 750e8544a7a4b4ed39e49a4201ab4620, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2467244981146527935}
   m_SourcePrefab: {fileID: 100100000, guid: 750e8544a7a4b4ed39e49a4201ab4620, type: 3}
 --- !u!1 &8594182855824630438 stripped
 GameObject:
@@ -1217,6 +1226,65 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!54 &6723241717539774179
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8594182855824630438}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 80
+  m_CollisionDetection: 0
+--- !u!114 &7448716331876904060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8594182855824630438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkRigidbody
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkRigidbodyBaseExpanded: 0
+  UseRigidBodyForMotion: 0
+  AutoUpdateKinematicState: 1
+  AutoSetKinematicOnDespawn: 1
+--- !u!114 &2467244981146527935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8594182855824630438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19d84145bf6460420b2be5b668265750, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerUfoMovement
+  ShowTopMostFoldoutHeaderGroup: 1
+  moveSpeed: 8
+  rotationSpeed: 120
 --- !u!4 &8939499483144501276 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 750e8544a7a4b4ed39e49a4201ab4620, type: 3}
