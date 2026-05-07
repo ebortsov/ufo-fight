@@ -1,20 +1,21 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
-using System.Threading.Tasks;
 
 public class LobbyManager : MonoBehaviour
 {
-    [Header("Create Lobby UI")]
+    [Header("UI")]
+    [SerializeField] private MainMenuUI mainMenuUI;
     [SerializeField] private TMP_Text gameCodeText;
-
-    [Header("Join Lobby UI")]
     [SerializeField] private TMP_InputField gameCodeInputField;
     [SerializeField] private TMP_Text joinErrorText;
+    [SerializeField] private Button startGameButton;
 
     private Lobby currentLobby;
+    private bool isHost;
 
     private const string LobbyName = "UFO Fight Lobby";
     private const int MaxPlayers = 2;
@@ -22,6 +23,8 @@ public class LobbyManager : MonoBehaviour
     public async void CreateLobby()
     {
         gameCodeText.text = "Creating lobby...";
+        isHost = true;
+        startGameButton.gameObject.SetActive(false);
 
         if (!AuthenticationService.Instance.IsSignedIn)
         {
@@ -43,6 +46,8 @@ public class LobbyManager : MonoBehaviour
             );
 
             gameCodeText.text = "Game Code:\n" + currentLobby.LobbyCode;
+
+            startGameButton.gameObject.SetActive(true);
 
             Debug.Log("Created lobby. Code: " + currentLobby.LobbyCode);
 
@@ -71,7 +76,14 @@ public class LobbyManager : MonoBehaviour
         {
             currentLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(code);
 
-            joinErrorText.text = "Joined lobby!";
+            isHost = false;
+            startGameButton.gameObject.SetActive(false);
+
+            gameCodeText.text = "Game Code:\n" + currentLobby.LobbyCode;
+            joinErrorText.text = "";
+
+            mainMenuUI.ShowCreateLobby();
+
             Debug.Log("Joined lobby. Code: " + currentLobby.LobbyCode);
         }
         catch (LobbyServiceException e)
@@ -79,6 +91,14 @@ public class LobbyManager : MonoBehaviour
             joinErrorText.text = "Invalid game code.";
             Debug.LogError(e);
         }
+    }
+
+    public void StartGame()
+    {
+        if (!isHost)
+            return;
+
+        Debug.Log("Start Game clicked by host.");
     }
 
     private void StartLobbyHeartbeat()
@@ -94,7 +114,6 @@ public class LobbyManager : MonoBehaviour
         try
         {
             await LobbyService.Instance.SendHeartbeatPingAsync(currentLobby.Id);
-            Debug.Log("Lobby heartbeat sent.");
         }
         catch (LobbyServiceException e)
         {
