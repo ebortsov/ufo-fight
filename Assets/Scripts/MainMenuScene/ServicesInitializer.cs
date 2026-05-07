@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Services.Core;
 using Unity.Services.Authentication;
+using System;
 using System.Threading.Tasks;
 
 public class ServicesInitializer : MonoBehaviour
@@ -19,8 +20,14 @@ public class ServicesInitializer : MonoBehaviour
 
         if (!AuthenticationService.Instance.IsSignedIn)
         {
+            string profileName = "ufo_" + Guid.NewGuid().ToString("N").Substring(0, 8);
+
+            AuthenticationService.Instance.SwitchProfile(profileName);
+
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
-            Debug.Log("Signed in. Player ID: " + AuthenticationService.Instance.PlayerId);
+
+            Debug.Log("Signed in with profile: " + profileName);
+            Debug.Log("Player ID: " + AuthenticationService.Instance.PlayerId);
         }
     }
 }

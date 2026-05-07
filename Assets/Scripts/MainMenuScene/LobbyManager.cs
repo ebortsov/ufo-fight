@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -87,8 +88,6 @@ public class LobbyManager : MonoBehaviour
             return;
         }
 
-        joinErrorText.text = "Invalid code or game already started.";
-
         try
         {
             currentLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(code);
@@ -114,7 +113,12 @@ public class LobbyManager : MonoBehaviour
         }
         catch (LobbyServiceException e)
         {
-            joinErrorText.text = "Invalid game code.";
+            joinErrorText.text = "Invalid game code or game already started.";
+            Debug.LogError(e);
+        }
+        catch (Exception e)
+        {
+            joinErrorText.text = "Something went wrong.";
             Debug.LogError(e);
         }
     }
