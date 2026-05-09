@@ -1258,6 +1258,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 750e8544a7a4b4ed39e49a4201ab4620, type: 3}
       insertIndex: -1
       addedObject: {fileID: -4506179231491543717}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 750e8544a7a4b4ed39e49a4201ab4620, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7484978722613492180}
   m_SourcePrefab: {fileID: 100100000, guid: 750e8544a7a4b4ed39e49a4201ab4620, type: 3}
 --- !u!1 &8594182855824630438 stripped
 GameObject:
@@ -1432,7 +1435,21 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   projectilePrefab: {fileID: 1118642194492691190, guid: cae1f61d531acb4d9adc89fcbcd0e755, type: 3}
   firePoint: {fileID: 5218345504419857044}
-  fireCooldown: 3
+  fireCooldown: 0.25
+--- !u!114 &7484978722613492180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8594182855824630438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c4c323c2cf03542bb1d21b0e17ab4aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  ShowTopMostFoldoutHeaderGroup: 1
+  maxHealth: 100
 --- !u!4 &8939499483144501276 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 750e8544a7a4b4ed39e49a4201ab4620, type: 3}

@@ -31,16 +31,27 @@ public class PlayerUfoShooting : NetworkBehaviour
             nextFireTime = Time.time + fireCooldown;
             ShootServerRpc();
         }
+        else if (mouse.leftButton.wasPressedThisFrame)
+        {
+            Debug.Log($"Time left before next shot: {nextFireTime - Time.time:F2}s");
+        }
     }
 
     [ServerRpc]
-    private void ShootServerRpc()
+    private void ShootServerRpc(ServerRpcParams serverRpcParams = default)
     {
         GameObject projectileObject = Instantiate(
             projectilePrefab,
             firePoint.position,
             firePoint.rotation * Quaternion.Euler(90f, 0f, 0f)
         );
+
+        Projectile projectile = projectileObject.GetComponent<Projectile>();
+
+        if (projectile != null)
+        {
+            projectile.Initialize(serverRpcParams.Receive.SenderClientId);
+        }
 
         NetworkObject networkObject = projectileObject.GetComponent<NetworkObject>();
 
