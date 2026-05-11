@@ -121,6 +121,7 @@ public class ClientLobbyManager : MonoBehaviour
         try
         {
             JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(relayJoinCode);
+            Debug.Log("Client Relay Region: " + joinAllocation.Region);
 
             UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
             transport.SetRelayServerData(AllocationUtils.ToRelayServerData(joinAllocation, ConnectionType));

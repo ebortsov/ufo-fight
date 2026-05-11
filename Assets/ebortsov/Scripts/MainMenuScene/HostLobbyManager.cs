@@ -26,6 +26,7 @@ public class HostLobbyManager : MonoBehaviour
 
     private const string GameStartedKey = "GameStarted";
     private const string RelayJoinCodeKey = "RelayJoinCode";
+    private const string RelayRegion = "europe-central2";
 
     public async void CreateLobby()
     {
@@ -101,7 +102,8 @@ public class HostLobbyManager : MonoBehaviour
 
         try
         {
-            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(MaxPlayers - 1);
+            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(MaxPlayers - 1, RelayRegion);
+            Debug.Log("Host Relay Region: " + allocation.Region);
             string relayJoinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
 
             UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
