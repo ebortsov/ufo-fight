@@ -7,6 +7,7 @@ public class PlayerHealth : NetworkBehaviour
 {
     [SerializeField] private int maxHealth = 100;
     [SerializeField] private float returnToMenuDelay = 4f;
+    [SerializeField] private GameObject explosionVfxPrefab;
 
     private NetworkVariable<int> currentHealth = new NetworkVariable<int>();
 
@@ -50,11 +51,12 @@ public class PlayerHealth : NetworkBehaviour
         {
             currentHealth.Value = 0;
             isDead = true;
-
+            
             Debug.Log("Player defeated: " + OwnerClientId);
+
             AnalyticsTracker.LogEvent("player_defeated");
 
-            ShowGameOverClientRpc(OwnerClientId);
+            HandlePlayerDefeatedClientRpc(OwnerClientId);
         }
     }
 
@@ -74,8 +76,16 @@ public class PlayerHealth : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void ShowGameOverClientRpc(ulong loserClientId)
+    private void HandlePlayerDefeatedClientRpc(ulong loserClientId)
     {
+        bool localPlayerLost = NetworkManager.Singleton.LocalClientId == loserClientId;
+
+        if (OwnerClientId == loserClientId)
+        {
+            SpawnExplosionEffect();
+            DisableDefeatedUfo();
+        }
+
         GameOverUI gameOverUI = FindFirstObjectByType<GameOverUI>();
 
         if (gameOverUI == null)
@@ -84,7 +94,7 @@ public class PlayerHealth : NetworkBehaviour
             return;
         }
 
-        if (NetworkManager.Singleton.LocalClientId == loserClientId)
+        if (localPlayerLost)
         {
             gameOverUI.ShowLose();
         }
@@ -94,6 +104,52 @@ public class PlayerHealth : NetworkBehaviour
         }
 
         StartCoroutine(ReturnToMainMenuAfterDelay());
+    }
+
+    private void SpawnExplosionEffect()
+    {
+        if (explosionVfxPrefab == null)
+            return;
+
+        GameObject explosion = Instantiate(
+            explosionVfxPrefab,
+            transform.position,
+            Quaternion.identity
+        );
+
+        Destroy(explosion, 2f);
+    }
+
+    private void DisableDefeatedUfo()
+    {
+        PlayerUfoMovement movement = GetComponent<PlayerUfoMovement>();
+        if (movement != null)
+            movement.enabled = false;
+
+        PlayerUfoShooting shooting = GetComponent<PlayerUfoShooting>();
+        if (shooting != null)
+            shooting.enabled = false;
+
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.useGravity = false;
+            rb.isKinematic = true;
+        }
+
+        Collider[] colliders = GetComponentsInChildren<Collider>();
+        foreach (Collider collider in colliders)
+        {
+            collider.enabled = false;
+        }
+
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer renderer in renderers)
+        {
+            renderer.enabled = false;
+        }
     }
 
     private IEnumerator ReturnToMainMenuAfterDelay()

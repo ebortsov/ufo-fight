@@ -1451,6 +1451,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   maxHealth: 100
   returnToMenuDelay: 4
+  explosionVfxPrefab: {fileID: 8165276654451966296, guid: c0e7721fde7b83161b03a3a7f4d47299, type: 3}
 --- !u!4 &8939499483144501276 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 750e8544a7a4b4ed39e49a4201ab4620, type: 3}
