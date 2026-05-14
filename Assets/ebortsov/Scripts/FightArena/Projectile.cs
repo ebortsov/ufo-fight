@@ -52,8 +52,18 @@ public class Projectile : NetworkBehaviour
 
         lifeTimer = elapsed;
         UpdateExpansion();
-    }
 
+        if (NetworkManager.Singleton != null &&
+            OwnerClientId == NetworkManager.Singleton.LocalClientId)
+        {
+            Renderer[] renderers = GetComponentsInChildren<Renderer>();
+
+            foreach (Renderer renderer in renderers)
+            {
+                renderer.enabled = false;
+            }
+        }
+    }
     private void Update()
     {
         transform.position += transform.up * speed * Time.deltaTime;
@@ -90,6 +100,9 @@ public class Projectile : NetworkBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!IsServer)
+            return;
+
+        if (other.GetComponentInParent<LocalProjectileVisual>() != null)
             return;
 
         PlayerHealth targetHealth = other.GetComponentInParent<PlayerHealth>();

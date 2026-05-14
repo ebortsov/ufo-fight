@@ -6,6 +6,7 @@ public class PlayerUfoShooting : NetworkBehaviour
 {
     [Header("Shooting")]
     [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private GameObject localProjectileVisualPrefab;
     [SerializeField] private Transform firePoint;
     [SerializeField] private float fireCooldown = 0.25f;
 
@@ -29,21 +30,42 @@ public class PlayerUfoShooting : NetworkBehaviour
         if (mouse.leftButton.wasPressedThisFrame && Time.time >= nextFireTime)
         {
             nextFireTime = Time.time + fireCooldown;
-            ShootServerRpc();
+
+            Vector3 firePosition = firePoint.position;
+            Quaternion fireRotation = firePoint.rotation * Quaternion.Euler(90f, 0f, 0f);
+
+            SpawnLocalProjectileVisual(firePosition, fireRotation);
+
+            ShootServerRpc(firePosition, fireRotation);
         }
-        else if (mouse.leftButton.wasPressedThisFrame)
+    }
+
+    private void SpawnLocalProjectileVisual(Vector3 position, Quaternion rotation)
+    {
+        if (localProjectileVisualPrefab == null)
+            return;
+
+        GameObject localProjectile = Instantiate(
+            localProjectileVisualPrefab,
+            position,
+            rotation
+        );
+
+        LocalProjectileVisual visual = localProjectile.GetComponent<LocalProjectileVisual>();
+
+        if (visual != null)
         {
-            Debug.Log($"Time left before next shot: {nextFireTime - Time.time:F2}s");
+            visual.Initialize(transform.root);
         }
     }
 
     [ServerRpc]
-    private void ShootServerRpc(ServerRpcParams serverRpcParams = default)
+    private void ShootServerRpc(Vector3 firePosition, Quaternion fireRotation, ServerRpcParams serverRpcParams = default)
     {
         GameObject projectileObject = Instantiate(
             projectilePrefab,
-            firePoint.position,
-            firePoint.rotation * Quaternion.Euler(90f, 0f, 0f)
+            firePosition,
+            fireRotation
         );
 
         Projectile projectile = projectileObject.GetComponent<Projectile>();
@@ -62,7 +84,8 @@ public class PlayerUfoShooting : NetworkBehaviour
             return;
         }
 
-        networkObject.Spawn();
+        networkObject.SpawnWithOwnership(serverRpcParams.Receive.SenderClientId);
+        
         AnalyticsTracker.LogEvent("shot_fired");
     }
 }
