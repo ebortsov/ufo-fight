@@ -22,6 +22,16 @@ public class PlayerHealth : NetworkBehaviour
         }
 
         currentHealth.OnValueChanged += OnHealthChanged;
+
+        if (IsOwner)
+        {
+            HealthUI healthUI = FindFirstObjectByType<HealthUI>();
+
+            if (healthUI != null)
+            {
+                healthUI.SetHealth(currentHealth.Value);
+            }
+        }
     }
 
     public override void OnNetworkDespawn()
@@ -50,6 +60,16 @@ public class PlayerHealth : NetworkBehaviour
     private void OnHealthChanged(int oldHealth, int newHealth)
     {
         Debug.Log("Player " + OwnerClientId + " HP: " + newHealth);
+
+        if (!IsOwner)
+            return;
+
+        HealthUI healthUI = FindFirstObjectByType<HealthUI>();
+
+        if (healthUI != null)
+        {
+            healthUI.SetHealth(newHealth);
+        }
     }
 
     [ClientRpc]
