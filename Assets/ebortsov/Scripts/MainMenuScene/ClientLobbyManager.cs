@@ -48,6 +48,7 @@ public class ClientLobbyManager : MonoBehaviour
             StartLobbyRefresh();
 
             Debug.Log("Client joined lobby waiting room. Code: " + currentLobby.LobbyCode);
+            AnalyticsTracker.LogEvent("lobby_joined");
         }
         catch (LobbyServiceException e)
         {

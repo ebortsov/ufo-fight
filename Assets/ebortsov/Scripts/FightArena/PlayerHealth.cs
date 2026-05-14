@@ -52,6 +52,7 @@ public class PlayerHealth : NetworkBehaviour
             isDead = true;
 
             Debug.Log("Player defeated: " + OwnerClientId);
+            AnalyticsTracker.LogEvent("player_defeated");
 
             ShowGameOverClientRpc(OwnerClientId);
         }

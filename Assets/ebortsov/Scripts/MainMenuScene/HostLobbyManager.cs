@@ -77,6 +77,7 @@ public class HostLobbyManager : MonoBehaviour
             StartLobbyRefresh();
 
             Debug.Log("Host created lobby. Code: " + currentLobby.LobbyCode);
+            AnalyticsTracker.LogEvent("lobby_created");
         }
         catch (LobbyServiceException e)
         {
@@ -145,6 +146,7 @@ public class HostLobbyManager : MonoBehaviour
             );
 
             Debug.Log("Host started Netcode and shared Relay code.");
+            AnalyticsTracker.LogEvent("match_started");
             StartCoroutine(LoadGameSceneWhenClientConnected());
         }
         catch (LobbyServiceException e)

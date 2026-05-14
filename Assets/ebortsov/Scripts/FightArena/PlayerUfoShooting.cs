@@ -63,5 +63,6 @@ public class PlayerUfoShooting : NetworkBehaviour
         }
 
         networkObject.Spawn();
+        AnalyticsTracker.LogEvent("shot_fired");
     }
 }

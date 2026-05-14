@@ -100,6 +100,7 @@ public class Projectile : NetworkBehaviour
                 return;
 
             targetHealth.TakeDamage(damage);
+            AnalyticsTracker.LogEvent("player_hit");
 
             if (NetworkObject.IsSpawned)
             {
