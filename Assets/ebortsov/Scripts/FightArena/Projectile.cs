@@ -7,6 +7,9 @@ public class Projectile : NetworkBehaviour
     [SerializeField] private float speed = 60f;
     [SerializeField] private float lifetime = 2f;
 
+    [Header("VFX")]
+    [SerializeField] private GameObject hitVfxPrefab;
+
     [Header("Damage")]
     [SerializeField] private int damage = 25;
 
@@ -113,7 +116,10 @@ public class Projectile : NetworkBehaviour
                 return;
 
             targetHealth.TakeDamage(damage);
+
             AnalyticsTracker.LogEvent("player_hit");
+
+            SpawnHitVfxClientRpc(transform.position);
 
             if (NetworkObject.IsSpawned)
             {
@@ -127,5 +133,20 @@ public class Projectile : NetworkBehaviour
         {
             NetworkObject.Despawn();
         }
+    }
+
+    [ClientRpc]
+    private void SpawnHitVfxClientRpc(Vector3 hitPosition)
+    {
+        if (hitVfxPrefab == null)
+            return;
+
+        GameObject hitVfx = Instantiate(
+            hitVfxPrefab,
+            hitPosition,
+            Quaternion.identity
+        );
+
+        Destroy(hitVfx, 1.5f);
     }
 }

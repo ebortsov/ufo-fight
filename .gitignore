@@ -125,3 +125,7 @@ nohup.out
 
 build/*
 .vscode/*
+
+# Archives and builds
+*.gz
+*.sha256
